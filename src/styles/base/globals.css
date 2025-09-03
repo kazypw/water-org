@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@100..900&display=swap');
+
+:root {
+  /* Colors */
+  --bg-color: #F1F6FF;
+  --accent-color: #0076C0;
+  --heading-color: #274690;
+  --secondary-color: #F5F3F5;
+  --font-color: #000000;
+
+  /* Font Sizes */
+  --main-size: clamp(1rem, 1.5vw, 1.05rem);
+  --subheading-size: clamp(1.5rem, 2vw, 2rem);
+  --heading-size: clamp(2rem, 3vw, 2.5rem);
+  --caption-size: clamp(.7rem, 1vw, .9rem);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+    display: none;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+html, body {
+  font-family: 'Montserrat', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: var(--main-size);
+  color: var(--font-color);
+  line-height: 1.4;
+
+  background-color: var(--bg-color);
+
+  scroll-behavior: smooth;
+}
