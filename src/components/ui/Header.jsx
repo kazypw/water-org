@@ -1,29 +1,10 @@
-import { useState, useEffect } from 'react';
-import { Search, HelpCircle, X, Droplets } from 'lucide-react';
+import { useState } from 'react';
+import { HelpCircle, X, Droplets } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useMapStore } from '../../store/useMapStore'; 
+import SearchBar from './SearchBar';
 
 const Header = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const [showInfo, setShowInfo] = useState(false);
-  const { setSearchOrg } = useMapStore.getState()
-
-  useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      setSearchOrg(searchQuery.trim());
-    }, 300);
-
-    return () => clearTimeout(debounceTimer);
-  }, [searchQuery, setSearchOrg]);
-
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const clearSearch = () => {
-    setSearchQuery('');
-    setSearchOrg('');
-  };
 
   const toggleInfo = () => {
     setShowInfo(!showInfo);
@@ -32,10 +13,8 @@ const Header = () => {
   return (
     <>
       <motion.header 
-        className="fixed top-0 left-0 z-50"
+        className="fixed top-0 left-0 right-0 z-50 w-full lg:h-[70px] h-[50px]"
         style={{
-          width: '97%',
-          height: '70px',
           backgroundColor: 'var(--bg-color)',
           borderBottom: '1px solid rgba(39, 70, 144, 0.1)',
           backdropFilter: 'blur(10px)',
@@ -52,85 +31,26 @@ const Header = () => {
         >
           {/* Logo Section */}
           <motion.div 
-            className="flex"
-            style={{
-              gap: '0.5rem'
-            }}
+            className="flex items-center gap-[0.5rem]"
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 pz-8">
-              <Droplets className="w-6 h-6 text-white" />
+            <div className="flex items-center justify-center lg:w-12 lg:h-12 w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 pz-8">
+              <Droplets className="lg:w-6 lg:h-6 w-4 h-4 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-semibold" style={{ color: 'var(--heading-color)' }}>
+              <h1 className="lg:text-lg text-md font-semibold" style={{ color: 'var(--heading-color)' }}>
                 KAZYPW
               </h1>
-              <p className="text-xs opacity-70" style={{ color: 'var(--accent-color)' }}>
+              <p className="lg:text-xs text-[10px] opacity-70" style={{ color: 'var(--accent-color)' }}>
                 Water Organizations
               </p>
             </div>
           </motion.div>
 
-          {/* Search Bar */}
-          <motion.div 
-            className="flex-1 max-w-sm mx-8"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.3 }}
-          >
-            <div className="relative">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search organizations"
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                  className="w-full h-10 pl-9 pr-10 rounded-full border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200"
-                  style={{ 
-                    backgroundColor: 'var(--secondary-color)',
-                    fontSize: 'var(--main-size)',
-                  }}
-                />
-                
-                {/* Search Icon */}
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                  <Search className="w-4 h-4" style={{ color: 'var(--accent-color)' }} />
-                </div>
-                
-                {/* Clear Button (only show when there's text) */}
-                {searchQuery && (
-                  <motion.button
-                    onClick={clearSearch}
-                    className="absolute right-12 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-gray-100 transition-colors"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <X className="w-3 h-3" style={{ color: 'var(--accent-color)' }} />
-                  </motion.button>
-                )}
-                
-                {/* Search indicator */}
-                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-                  <motion.div
-                    className="w-2 h-2 rounded-full bg-blue-400"
-                    animate={{ 
-                      scale: searchQuery ? [1, 1.2, 1] : 1,
-                      opacity: searchQuery ? [1, 0.6, 1] : 0.3
-                    }}
-                    transition={{ 
-                      duration: 1.5, 
-                      repeat: searchQuery ? Infinity : 0,
-                      ease: "easeInOut" 
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <div className='lg:block hidden'>
+            <SearchBar />
+          </div>
 
           {/* Info Button */}
           <motion.button
