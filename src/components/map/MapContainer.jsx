@@ -3,7 +3,8 @@ import maplibregl from "maplibre-gl";
 import { useMapStore } from "../../store/useMapStore";
 import { useDataStore } from "../../store/useDataStore";
 import loadCSVData from "../../utils/loadCSVData";
-import blanketData from '../../assets/blanket.json'
+import { searchOrganizations, fitToCoordinates } from "../../utils/mapUtils"
+import { creatingBlanketLayer } from '../../utils/mapLayers'
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useUIStore } from "../../store/useUIStore";
@@ -25,32 +26,6 @@ function MapContainer() {
   const itemCardCoordinates = useMapStore((s) => s.itemCardCoordinates);
   const setActiveMarkerInfo = useMapStore((s) => s.setActiveMarkerInfo)
 
-  const searchOrganizations = (data, query) => {
-    if (!query || query.trim() === "") {
-      return data;
-    }
-
-    const searchTerms = query.toLowerCase().split(/\s+/).filter(term => term.length > 0);
-    
-    return data.filter(item => {
-      const searchableFields = [
-        item.Name,
-        item.Organization,
-        item.City,
-        item.Region,
-      ];
-
-      const searchableText = searchableFields
-        .filter(field => field != null)
-        .map(field => String(field).toLowerCase())
-        .join(' ');
-
-      return searchTerms.every(term => 
-        searchableText.includes(term)
-      );
-    });
-  };
-
   useEffect(() => {
     if (!mapRef.current) return;
 
@@ -70,32 +45,7 @@ function MapContainer() {
 
     map.on("zoom", () => setZoom(map.getZoom()));
 
-    map.on('load', () => {
-      map.addSource('blanket', {
-        type: 'geojson',
-        data: blanketData
-      });
-
-      map.addLayer({
-        id: 'blanket-fill',
-        type: 'fill',
-        source: 'blanket',
-        paint: {
-          'fill-color': '#000000',
-          'fill-opacity': 0.85
-        }
-      });
-
-      map.addLayer({
-        id: 'blanket-outline',
-        type: 'line',
-        source: 'blanket',
-        paint: {
-          'line-color': '#000000',
-          'line-width': 2
-        }
-      });
-    });
+    creatingBlanketLayer(map)
 
     return () => {
       if (mapInstanceRef.current) {
@@ -205,28 +155,6 @@ function MapContainer() {
       }
     }
   }, [orgData, searchOrg]);
-
-  function fitToCoordinates(map, coordinates, options = {}) {
-    if (!map || !coordinates || coordinates.length === 0) {
-      console.warn("Map or coordinates missing");
-      return;
-    }
-  
-    const coordsArray = Array.isArray(coordinates[0]) 
-      ? coordinates 
-      : [coordinates];
-  
-    const bounds = new maplibregl.LngLatBounds();
-  
-    coordsArray.forEach(coord => bounds.extend(coord));
-  
-    map.fitBounds(bounds, {
-      padding: 40,
-      maxZoom: 14,
-      duration: 2000,
-      ...options
-    });
-  }
 
   useEffect(() => {
     fitToCoordinates(mapInstanceRef.current, itemCardCoordinates)

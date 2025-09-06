@@ -1,26 +1,11 @@
-import { useState, useEffect } from "react";
+import { useListAnimation } from "../../../hooks/useListAnimation";
 import { useUIStore } from "../../../store/useUIStore";
+import ListAnimations from './ListAnimations'
+import CloseButton from './CloseButton'
 
 const FilterItem = () => {
   const sidebarActive = useUIStore((s) => s.sidebarActive);
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
-
-  useEffect(() => {
-    if (sidebarActive === 'filter') {
-      setIsVisible(true);
-      setIsAnimatingOut(false);
-    } else if (isVisible) {
-      setIsAnimatingOut(true);
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-        setIsAnimatingOut(false);
-      }, 400); // Match exit animation duration
-      
-      return () => clearTimeout(timer);
-    }
-  }, [sidebarActive, isVisible]);
+  const { isVisible, isAnimatingOut } = useListAnimation(sidebarActive, 'filter');
 
   if (!isVisible) return null;
 
@@ -31,59 +16,16 @@ const FilterItem = () => {
       }`}
       style={{
         backgroundColor: 'var(--bg-color)',
-        padding: '2rem 1rem',
+        padding: '3rem 1rem',
         animation: isAnimatingOut 
           ? 'slideOut 0.4s ease-in forwards' 
           : 'slideIn 0.5s ease-out forwards'
       }}
     >
+      <CloseButton isAnimatingOut={isAnimatingOut} />
       FilterItem
 
-      <style jsx>{`
-        @keyframes slideIn {
-          from {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-
-        @keyframes slideOut {
-          from {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          to {
-            transform: translateX(-100%);
-            opacity: 0;
-          }
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeOutDown {
-          from {
-            opacity: 1;
-            transform: translateY(0);
-          }
-          to {
-            opacity: 0;
-            transform: translateY(-10px);
-          }
-        }
-      `}</style>
+      <ListAnimations />
     </div>
   );
 };
