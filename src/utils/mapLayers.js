@@ -1,4 +1,4 @@
-import blanketData from '../../assets/blanket.json'
+import blanketData from '../assets/blanket.json'
 
 const MAIN_COLOR = '#000000'
 

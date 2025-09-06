@@ -1,11 +1,10 @@
 import Papa from "papaparse";
 
 import { useDataStore } from "../store/useDataStore";
-import addDebugMessage from "./debugMessage";
 import CONSTANTS from "./constants";
 
 export default function loadCSVData() {
-    addDebugMessage('Loading CSV data...');
+    console.log('Loading CSV data...');
 
     const { setOrgData } = useDataStore.getState();
 
@@ -14,11 +13,11 @@ export default function loadCSVData() {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            addDebugMessage(`CSV loaded. Rows: ${results.data.length}`, 'success');
+            console.log(`CSV loaded. Rows: ${results.data.length}`, 'success');
             setOrgData(results)
         },
         error: function(error) {
-            addDebugMessage(`CSV error: ${error}`, 'error');
+            console.log(`CSV error: ${error}`, 'error');
         }
     });
 }
