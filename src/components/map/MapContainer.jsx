@@ -29,16 +29,26 @@ function MapContainer() {
   useEffect(() => {
     if (!mapRef.current) return;
 
+    // Default max bounds
+    let maxBounds = [
+      [40, 39], // southwest
+      [95, 57]  // northeast
+    ];
+
+    if (window.innerWidth <= 768) {
+      maxBounds = [
+        [20, 34],
+        [100, 65]
+      ];
+    }
+
     const map = new maplibregl.Map({
       container: mapRef.current,
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
       center,
       zoom,
       renderWorldCopies: false,
-      maxBounds: [
-        [40, 39],   // southwest 
-        [95, 57]    // northeast 
-      ]
+      maxBounds
     });
 
     mapInstanceRef.current = map;

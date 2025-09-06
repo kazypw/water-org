@@ -96,9 +96,11 @@ const IconMenu = () => {
     return (
       <div className="fixed bottom-0 left-0 right-0 z-50">
         {/* Search Bar on top of the menu */}
-        <div className="bg-[#F0F0FA] rounded-t-[1rem] border-t border-gray-200 px-4 py-3 flex justify-center">
-          <SearchBar />
-        </div>
+        {!sidebarActive && (
+          <div className="bg-[#F0F0FA] rounded-t-[1.4rem] border-t border-gray-200 px-4 py-3 flex justify-center">
+            <SearchBar />
+          </div>
+        )}
         
         {/* Bottom menu icons */}
         <div className="bg-[#F1F6FF] border-t border-gray-200 shadow-lg">
